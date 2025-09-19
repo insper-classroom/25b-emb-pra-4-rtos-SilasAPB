@@ -20,6 +20,11 @@ volatile int flag_BTN_R = 0;
 volatile int flag_BTN_G = 0;
 volatile int flag_BTN_B = 0;
 
+bool timer_0_callback(repeating_timer_t *rt) {
+    timer_r = 1;
+    return true; // keep repeating
+}
+
 // == funcoes de inicializacao ===
 void btn_callback(uint gpio, uint32_t events) {
     if (events & 0x4) {
@@ -98,25 +103,26 @@ void task_1(void *p) {
     while (1) {
         if (flag_BTN_R == 1) {
             gpio_put(LED_PIN_R, 0);
-            ssd1306_draw_string(&disp, 8, 24, 2, "RED");
             ssd1306_clear(&disp);
+            ssd1306_draw_string(&disp, 8, 24, 2, "RED");
             ssd1306_show(&disp);
             gpio_put(LED_PIN_R, 1);
+            flag_BTN_R=0;
         }
 
         if (flag_BTN_G == 1) {
             gpio_put(LED_PIN_G, 0);
-            ssd1306_draw_string(&disp, 8, 24, 2, "GREEN");
-
             ssd1306_clear(&disp);
+            ssd1306_draw_string(&disp, 8, 24, 2, "GREEN");
             ssd1306_show(&disp);
             gpio_put(LED_PIN_G, 1);
+            flag_BTN_G=0;
         }
 
         if (flag_BTN_B == 1) {
             gpio_put(LED_PIN_B, 0);
-            ssd1306_draw_string(&disp, 8, 24, 2, "BLUE");
             ssd1306_clear(&disp);
+            ssd1306_draw_string(&disp, 8, 24, 2, "BLUE");
             ssd1306_show(&disp);
             gpio_put(LED_PIN_B, 1);
             flag_BTN_B = 0;
